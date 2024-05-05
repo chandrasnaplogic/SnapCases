@@ -44,12 +44,33 @@
 }
 
 /* App.css */
-.snaplogic-logo {
-  width: 200px;
-  height: auto;
-  margin-top: 5px;
+body {
+  font-family: Arial, sans-serif;
+  transition: background-color 0.3s ease;
 }
 
 
+.Snaplogic-logo {
+  width: 200px;
+  height: auto;
+  margin-top: 10px;
+}
 
+/* Dark mode styles */
+.dark {
+  background-color: #222;
+  color: #fff;
+}
 
+.dark .Snaplogic-logo {
+  filter: invert(1);
+}
+
+.dark .theme-toggle-container {
+  margin-bottom: 20px;
+}
+
+.dark .theme-toggle-button {
+  background-color: #444;
+  color: #fff;
+}

@@ -46,4 +46,28 @@ app.get("/data", async (req,res) => {
     }
   });
   
+// endpoint to get the records based on testrun_id
+
+app.get("/testEdata", async (req, res) => {
+  try {
+    const testrunId = req.query.testrun_id; // Get testrun_id from query parameter
+
+    if (!testrunId) {
+      return res.status(400).json({ error: "Missing testrun_id parameter" });
+    }
+
+    const client = await pool.connect(); // Connect to database
+    const result = await client.query(`
+      SELECT * FROM master_test_execution WHERE testrun_id = $1;
+    `, [testrunId]); // Execute the query with the provided testrun_id
+    
+    client.release(); // Release the database connection
+    res.json(result.rows); // Return the query result
+
+    console.log(result.rowCount);
+  } catch (err) {
+    console.error("Error executing query", err); // Log error
+    res.status(500).json({ error: "Internal Server Error" }); // Return error response
+  }
+});
 
