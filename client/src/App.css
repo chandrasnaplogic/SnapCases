@@ -1,3 +1,9 @@
+.ag-header-cell-label {
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+
 
 .custom-header {
   color: #00379a; /* Change the color value as needed */
@@ -62,9 +68,9 @@ body {
   color: #fff;
 }
 
-.dark .Snaplogic-logo {
+/* .dark .Snaplogic-logo {
   filter: invert(1);
-}
+} */
 
 .dark .theme-toggle-container {
   margin-bottom: 20px;
@@ -74,3 +80,107 @@ body {
   background-color: #444;
   color: #fff;
 }
+
+.dark-mode {
+  background-color: #222;
+  color: #fff;
+}
+
+.light-mode {
+  background-color: #fff;
+  color: #000;
+}
+
+.button-link {
+  padding: 8px 16px;
+  background-color: #182852;
+  color: #fff;
+  text-decoration: none;
+  margin-right: 10px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgb(12, 161, 161);
+}
+
+.button-link:hover {
+  background-color: #030fbd;
+}
+
+
+/* pop up message CSS*/
+
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: 100px;
+  transform: translate(-50%, -50%);
+  background-color: #182852;
+   /* Yellow background color */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgb(12, 161, 161);
+  z-index: 1000;
+}
+
+.popup-message {
+  font-size: 18px;
+  color: #fafafa; /* Black text color */
+  font-family: 'Open Sans', sans-serif; /* Change font family */
+  text-align: center; /* Center-align text */
+  line-height: 1.5; /* Increase line height for better readability */
+}
+
+.popup-close {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  color: #fff;
+  cursor: pointer;
+}
+
+
+/* Css for label/input/ update button*/
+
+label {
+  font-size: 18px;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+input {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 300px;
+  margin-bottom: 20px;
+}
+button {
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  background-color: #182852;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgb(12, 161, 161);
+}
+
+button:hover{
+  background-color: #030fbd;
+}
+
+/* styl to h2*/
+
+h2 {
+  font-size: 30px;
+  font-weight: bold;
+  font-family: 'Open Sans', sans-serif;
+ 
+  margin-bottom: 20px;
+  text-align: center;
+  
+}
+

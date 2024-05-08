@@ -1,6 +1,7 @@
 const express = require("express")
 const {Pool} = require("pg")
 const cors =  require("cors")
+require('dotenv').config();
 
 const app = express();
 app.use(cors())
@@ -9,11 +10,11 @@ const PORT = 4000;
 
 //PostgreSQL configuration
 const pool = new Pool({
-    user: "postgres",
-    host: "localhost",
-    database: "jenkinsdb",
-    password: "181229@Rs",
-    port: 5432,
+    user: process.env.DB_USER, //username of db
+    host: process.env.DB_HOST, //host address host.docker.internal
+    database: process.env.DB_DATABASE, //database name
+    password: process.env.DB_PASSWORD, //user password
+    port: process.env.DB_PORT //port number for postgresql
   });
 
   app.listen(PORT,() => {
@@ -46,28 +47,37 @@ app.get("/data", async (req,res) => {
     }
   });
   
-// endpoint to get the records based on testrun_id
 
-app.get("/testEdata", async (req, res) => {
+app.put("/updateIsCompleted", async (req, res) => {
   try {
-    const testrunId = req.query.testrun_id; // Get testrun_id from query parameter
+    const testRunId = req.query.testrun_id;
 
-    if (!testrunId) {
+    if (!testRunId) {
       return res.status(400).json({ error: "Missing testrun_id parameter" });
     }
+    const client = await pool.connect();
+  
+    const result = await client.query(
+      `UPDATE test_execution_details
+       SET is_completed = true
+       WHERE testrun_id = $1`,
+      [testRunId]
+    );
 
-    const client = await pool.connect(); // Connect to database
-    const result = await client.query(`
-      SELECT * FROM master_test_execution WHERE testrun_id = $1;
-    `, [testrunId]); // Execute the query with the provided testrun_id
+    client.release();
+    const rowCount = result.rowCount; // Get the number of rows affected
     
-    client.release(); // Release the database connection
-    res.json(result.rows); // Return the query result
-
-    console.log(result.rowCount);
-  } catch (err) {
-    console.error("Error executing query", err); // Log error
-    res.status(500).json({ error: "Internal Server Error" }); // Return error response
+   if(rowCount>0){
+    res.json({ message: ` Hey! ${rowCount} Record(s) updated. IsCompleted set to True for TestRunId: ${testRunId}` });
+   } 
+   else {
+     res.json({message:`Sorry! It is Invalid (or) Unknown TestRunId: ${testRunId}`})
+   }
+ 
+  } 
+  catch (err) {
+    console.error( "Error Updating is_completed Records", err);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 

@@ -5,16 +5,24 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import './App.css';
+import { Link } from "react-router-dom";
 
 export const DataGrid = () => { // Receive darkMode as a prop
   const [data, setData] = useState([]);
   const [keys, setKeys] = useState([]);
-  const [selectedDays, setSelectedDays] = useState(15);
+  const [selectedDays, setSelectedDays] = useState(1);
   const [darkMode, setDarkMode] = useState(false); // State for dark mode
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
+    if (!darkMode) {
+      document.documentElement.classList.add("dark-mode");
+    } else {
+      document.documentElement.classList.remove("dark-mode");
+    }
   };
+
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -130,6 +138,7 @@ export const DataGrid = () => { // Receive darkMode as a prop
     enableValue: true,
      flex: 1,//flexiable column
      minWidth: 50,
+     suppressHeaderMenuButton: true
   };
 
   return (
@@ -137,7 +146,11 @@ export const DataGrid = () => { // Receive darkMode as a prop
       <div  className={`App ${darkMode ? 'dark' : ''}`}> 
         <img src='https://content.energage.com/company-images/SE95252/SE95252_logo_orig.png' alt='Snaplogic' className='Snaplogic-logo'  style={{ width: '200px', height: 'auto', marginTop:'10px'}}></img>
 
-          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+         <div style={{ display: "flex", justifyContent: "flex-end"}}>
+          <div>
+          <Link to="/TestRun" className="button-link">ABORT</Link>
+          </div>
+         
          <div style={{ marginRight: "10px" }}>
           <img
           src="https://www.vectorlogo.zone/logos/snaplogic/snaplogic-icon.svg"
