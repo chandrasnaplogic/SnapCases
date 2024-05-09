@@ -31,43 +31,49 @@ export const DataGrid = () => { // Receive darkMode as a prop
           `http://localhost:4000/data?days=${selectedDays}`
         );
         const fetchedData = response.data;
+        
         setData(fetchedData);
         if (fetchedData.length > 0) {
           const firstItemKeys = Object.keys(fetchedData[0]);
           setKeys(firstItemKeys);
         }
+
+        // Convert string representations of numbers to actual numbers
+        const convertedData = fetchedData.map((item) => {
+          const convertedItem = {};
+          for (const key in item) {
+            if (typeof item[key] === "string" && !isNaN(item[key])) {
+              if (item[key].includes(".")) {
+                convertedItem[key] = parseFloat(item[key]);
+              } else if (/^-?\d+$/.test(item[key])) {
+                convertedItem[key] = parseInt(item[key]);
+              } 
+               else {
+                convertedItem[key] = item[key];
+              }
+            } else {
+              convertedItem[key] = item[key];
+            }
+          }
+          return convertedItem;
+        });
+        setData(convertedData); //assigning data to data variable
+        // Extract keys from the first data item
+        if (convertedData.length > 0) {
+          const firstItemKeys = Object.keys(convertedData[0]);
+          setKeys(firstItemKeys); //assigning data to keys
+        }
+        
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-
+   
     fetchData();
   }, [selectedDays]);
 
-  // Rest of the code remains unchanged
+  
 
-
-  /* Custom Cell Renderer (Display tick / cross in 'Successful' column) */
-  const MissionResultRenderer = ({ value }) => (
-    <span
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        height: "100%",
-        alignItems: "center",
-      }}
-    >
-      {
-        <img
-          alt={`${value}`}
-          src={`https://www.ag-grid.com/example-assets/icons/${
-            value ? "tick-in-circle" : "cross-in-circle"
-          }.png`}
-          style={{ width: "auto", height: "auto" }}
-        />
-      }
-    </span>
-  );
 
   var currentYear = new Date().getFullYear();
   //Date custom filter
@@ -104,23 +110,16 @@ export const DataGrid = () => { // Receive darkMode as a prop
   };
 
 
-  const rowData = data;
+  //const rowData = data;
   const colData = keys.map((key) => {
     const column = {
       headerName: key.toUpperCase(), // Use key as headerName
       field: key, // Use key as field
+      tooltipValueGetter: (p)=> p.value,
+      headerTooltip:key.toUpperCase()
     };
 
-    // Add checkboxSelection: true if key is 'id'
-    // if (key === "id") {
-    //   column.checkboxSelection = true;
-    // }
-
-    // Add cellRenderer: true if key is 'boolean'
-    if (key === "boolean") {
-      column.cellRenderer = MissionResultRenderer;
-    }
-
+    
     if(key==='creation_datetime'){
       column.filter='agDateColumnFilter';
       column.filterParams = filterParams;
@@ -176,9 +175,9 @@ export const DataGrid = () => { // Receive darkMode as a prop
 
       
 
-      <div className={`ag-theme-quartz${darkMode ? '-dark' : ''}`} style={{ height: 560 }}> {/* Conditional class for dark mode */}
+      <div className={`ag-theme-quartz${darkMode ? '-dark' : ''}`} style={{ height: "80vh" }}> {/* Conditional class for dark mode */}
         <AgGridReact
-          rowData={rowData}
+          rowData={data}
           columnDefs={colData}
           defaultColDef={defaultColDef}
           rowSelection="multiple"
@@ -187,6 +186,7 @@ export const DataGrid = () => { // Receive darkMode as a prop
           paginationPageSize={10}
           enableCellTextSelection={true}
           enableRangeSelection={true} 
+          tooltipShowDelay={500}
           paginationPageSizeSelector={[10, 25, 50, 100, 200]}
         />
       </div>
